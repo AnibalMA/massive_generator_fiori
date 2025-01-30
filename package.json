@@ -2,6 +2,10 @@
   "name": "massive_generator_fiori",
   "version": "0.0.1",
   "description": "Generador masivo para la creación de Tiles &amp; TM",
+  "author": {
+    "name": "Anibal Marlo",
+    "email": "anibalmarloaguilar@gmail.com"
+  },
   "keywords": [
     "ui5",
     "openui5",
