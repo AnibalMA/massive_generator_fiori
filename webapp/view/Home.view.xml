@@ -1,0 +1,191 @@
+<mvc:View
+    xmlns:f="sap.ui.layout.form"
+    xmlns:unified="sap.ui.unified"
+    xmlns:core="sap.ui.core"
+    controllerName="nttdata.massivegeneratorfiori.controller.Home"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:l="sap.ui.layout"
+    xmlns="sap.m"
+>
+    <Page
+        id="page"
+        title="{i18n>title}"
+    >
+        <content>
+        <MessageStrip class="sapUiSmallMargin" showIcon="true" type="Information" text="El archivo a cargar debe cumplir con la plantilla indicada. No se está considerando parámetros, solo los campos de la plantilla."></MessageStrip>
+            <FlexBox
+                width="100%"
+                class="sapUiSmallMarginTop"
+                direction="{= ${device>/system/phone} ? 'Column' : 'Row'}"
+                justifyContent="SpaceBetween"
+            >
+                <items>
+                    <VBox
+                        width="{= ${device>/system/phone} ? '100%' : '35%'}"
+                        class="sapUiMediumMarginBottom"
+                    >
+                        <f:Form
+                            id="_IDGenForm"
+                            title="Datos a procesar"
+                            class="sapUiSmallMarginBottom"
+                            editable="true"
+                        >
+                            <f:layout>
+                                <f:ResponsiveGridLayout
+                                    id="_IDGenResponsiveGridLayout"
+                                    labelSpanXL="12"
+                                    labelSpanL="12"
+                                    labelSpanM="12"
+                                    labelSpanS="12"
+                                    adjustLabelSpan="false"
+                                    emptySpanXL="0"
+                                    emptySpanL="0"
+                                    emptySpanM="0"
+                                    emptySpanS="0"
+                                    columnsXL="1"
+                                    columnsL="1"
+                                    columnsM="1"
+                                    singleContainerFullSize="false"
+                                />
+                            </f:layout>
+                            <f:formContainers>
+                                <f:FormContainer id="_IDGenFormContainer">
+                                    <f:formElements>
+                                        <f:FormElement id="_IDGenFormElement1">
+                                            <f:label>
+                                                <Label
+                                                    id="_IDGenLabel1"
+                                                    text="OT Workbench"
+                                                    required="true"
+                                                />
+                                            </f:label>
+                                            <f:fields>
+                                                <ComboBox
+                                                    id="_IDGenComboBox"
+                                                    items="{OTWorkbenchs>/items}"
+                                                    width="100%"
+                                                    selectedKey="{OTWorkbenchs>/selectedOT}"
+                                                >
+                                                    <layoutData>
+                                                        <l:GridData
+                                                            id="_IDGenGridData3"
+                                                            span="XL4 L4 M12 S12"
+                                                        />
+                                                    </layoutData>
+                                                    <items>
+                                                        <core:Item
+                                                            key="{OTWorkbenchs>id}"
+                                                            text="{OTWorkbenchs>id} - {OTWorkbenchs>description}"
+                                                        />
+                                                    </items>
+                                                </ComboBox>
+                                            </f:fields>
+                                        </f:FormElement>
+                                        <f:FormElement >
+                                            <f:label>
+                                                <Label
+                                                    text="Package"
+                                                    required="true"
+                                                />
+                                            </f:label>
+                                            <f:fields>
+                                                <Input value="{Package>/id}"></Input>
+                                            </f:fields>
+                                        </f:FormElement>
+                                        <f:FormElement id="_IDGenFormElement">
+                                            <f:label>
+                                                <Label
+                                                    id="_IDGenLabel"
+                                                    text="Cargar Archivo"
+                                                    required="true"
+                                                />
+                                            </f:label>
+                                            <f:fields>
+                                                <unified:FileUploader
+                                                    id="fileUploader"
+                                                    uploadComplete="handleUploadComplete"
+                                                    change="handleFileChange"
+                                                    tooltip="Seleccionar archivo Excel"
+                                                    placeholder="Seleccionar archivo Excel"
+                                                    fileType="xls,xlsx"
+                                                >
+                                                    <unified:layoutData>
+                                                        <l:GridData
+                                                            id="_IDGenGridData2"
+                                                            span="XL4 L4 M12 S12"
+                                                            linebreak="true"
+                                                        />
+                                                    </unified:layoutData>
+                                                </unified:FileUploader>
+                                            </f:fields>
+                                        </f:FormElement>
+                                        <f:FormElement
+                                            id="_IDGenFormElement2"
+                                            label=""
+                                        >
+                                            <f:fields>
+                                                <Button
+                                                    id="_IDGenButton"
+                                                    text="Procesar"
+                                                    press="onPressProcesar"
+                                                    busyIndicatorDelay="0"
+                                                    width="100%"
+                                                >
+                                                    <layoutData>
+                                                        <l:GridData
+                                                            id="_IDGenGridData4"
+                                                            span="XL4 L4 M12 S12"
+                                                        />
+                                                    </layoutData>
+                                                </Button>
+                                            </f:fields>
+                                        </f:FormElement>
+                                    </f:formElements>
+                                </f:FormContainer>
+                            </f:formContainers>
+                        </f:Form>
+                    </VBox>
+
+                    <VBox width="{= ${device>/system/phone} ? '100%' : '60%'}">
+                        <Table
+                            items="{oProcessResult>/}"
+                            class="sapUiResponsiveMargin"
+                            width="100%"
+                        >
+                            <columns>
+                                <Column width="3rem">
+                                    <Text text="N°" />
+                                </Column>
+                                <Column width="18rem">
+                                    <Text text="Tile / TCODE" />
+                                </Column>
+                                <Column>
+                                    <Text text="Estado Tile" />
+                                </Column>
+                                <Column>
+                                    <Text text="Estado TM" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem highlight="{
+                                    parts: [
+                                        'oProcessResult>statusTitle',
+                                        'oProcessResult>statusTM'
+                                    ],
+                                    formatter: '.formatter.formatHighlight'
+                                }">
+                                    <cells>
+                                        <Text text="{oProcessResult>id}" />
+                                        <Text text="{oProcessResult>name}" />
+                                        <Text text="{oProcessResult>statusTitle}" />
+                                        <Text text="{oProcessResult>statusTM}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </VBox>
+                </items>
+            </FlexBox>
+        </content>
+    </Page>
+</mvc:View>
