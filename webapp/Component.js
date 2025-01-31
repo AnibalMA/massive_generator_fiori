@@ -1,3 +1,11 @@
+sap.ui.loader.config({
+    shim: {
+      "nttdata/massivegeneratorfiori/lib/xlsx.full.min": {
+        amd: true,
+        exports: "XLSX",
+      },
+    }
+});
 sap.ui.define([
     "sap/ui/core/UIComponent",
     "nttdata/massivegeneratorfiori/model/models"

@@ -12,6 +12,9 @@ builder:
     excludes:
       - /test/**
       - /localService/**
+  componentPreload:
+    excludes:
+      - /lib/**
   customTasks:
     - name: webide-extension-task-updateManifestJson
       afterTask: replaceVersion

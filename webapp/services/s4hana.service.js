@@ -3,9 +3,15 @@ sap.ui.define([
     "./odata.service"
 ], function (Component, ServiceOData) {
     "use strict";
-    const COMPONENT_ID = "application-nttdatamassivegeneratorfiori-display-component";
+    const getComponentID = () => {
+        let oComponentRegistry = Object.entries(Component.registry.all()).filter(([key]) => key.toLowerCase().includes("application") || key.toLowerCase().includes("container"))?.[0];
+        if(oComponentRegistry) return oComponentRegistry?.[0];
+        else console.log("No se encontró Component ID");
+    };
+    const COMPONENT_ID = getComponentID();
     let oDataService = new ServiceOData(Component.get(COMPONENT_ID).getModel());
     let oDataServiceTransport = new ServiceOData(Component.get(COMPONENT_ID).getModel("transport"));
+    //oDataService.oDataModel.setUseBatch(false);
 
     return {
         /** 
@@ -95,25 +101,28 @@ sap.ui.define([
          * @returns {Promise} Promesa con el resultado de la operación
          */
         fnPostTileTM: function (oBodyTile, oBodyTM) {
-            return new Promise((resolve, reject) => {
-                let oResTile;
+            return new Promise(async (resolve, reject) => {
+                let oResTile = await this.fnPostTile(oBodyTile);
+                let oResTM = await this.fnPostTM(oBodyTM)
 
+                resolve({oResTile, oResTM});
+            });
+        },
+        fnPostTile: function(oBodyTile){
+            return new Promise((resolve, reject) => {
                 oDataService.create("PageChipInstances", oBodyTile).then((oData) => {
-                    oResTile = oData
+                    resolve(oData)
                 }).catch((oErr) => {
-                    oResTile = oErr;
+                    resolve(oErr);
                 });
-                
-                oDataService.create("PageChipInstances", oBodyTM).then( (oData) => {
-                    resolve({
-                        oResTile,
-                        oResTM: oData
-                    });
+            });
+        },
+        fnPostTM: function(oBodyTM){
+            return new Promise((resolve, reject) => {
+                oDataService.create("PageChipInstances", oBodyTM).then((oData) => {
+                    resolve(oData)
                 }).catch((oErr) => {
-                    resolve({
-                        oResTile,
-                        oResTM: oErr
-                    });
+                    resolve(oErr);
                 });
             });
         }

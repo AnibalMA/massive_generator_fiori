@@ -4,6 +4,10 @@ specVersion: "3.1"
 metadata:
   name: nttdata.massivegeneratorfiori
 type: application
+builder:
+  componentPreload: # or libraryPreload
+    excludes:
+      - /lib/**
 server:
   customMiddleware:
     - name: fiori-tools-proxy

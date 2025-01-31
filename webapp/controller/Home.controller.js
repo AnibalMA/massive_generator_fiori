@@ -2,20 +2,10 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "../model/map",
     "../services/s4hana.service",
-    "../model/formatter"
-], (Controller, Map, S4HService, formatter) => {
+    "../model/formatter",
+    "../lib/xlsx.full.min"
+], (Controller, Map, S4HService, formatter, XLSX) => {
     "use strict";
-    const oHTTPCodes = {
-        OK: 200,
-        CREATED: 201,
-        ACCEPTED: 202,
-        NO_CONTENT: 204,
-        BAD_REQUEST: 400,
-        UNAUTHORIZED: 401,
-        FORBIDDEN: 403,
-        NOT_FOUND: 404,
-        INTERNAL_SERVER_ERROR: 500
-    };
     return Controller.extend("nttdata.massivegeneratorfiori.controller.Home", {
         formatter: formatter,
         onInit() {
@@ -146,8 +136,8 @@ sap.ui.define([
                     aFinalResult.push({
                         id: iRowIndex + 1,
                         name: JSON.parse(JSON.parse(oData[iRowIndex].oBodyTile.configuration).tileConfiguration).display_title_text + " / " + JSON.parse(JSON.parse(oData[iRowIndex].oBodyTM.configuration).tileConfiguration).transaction?.code,
-                        statusTile: oRow.oResTile.oErrorDetailed ? `Error (${oRow.oResTile.oErrorDetailed.status} - ${oRow.oResTile.oErrorDetailed.message})` : `OK (${oRow.oResTile.oResponse.statusCode} - ${oRow.oResTile.oResponse.statusText})`,
-                        statusTM: oRow.oResTM.oErrorDetailed ? `Error (${oRow.oResTM.oErrorDetailed.status} - ${oRow.oResTM.oErrorDetailed.message})` : `OK (${oRow.oResTM.oResponse.statusCode} - ${oRow.oResTM.oResponse.statusText})` 
+                        statusTile: oRow.oResTile.oErrorDetailed ? `Error (${oRow.oResTile.oErrorDetailed.status} - ${oRow.oResTile.oErrorDetailed.message})` : this.formatter.getStatusMessage(oRow.oResTile.oResponse),
+                        statusTM: oRow.oResTM.oErrorDetailed ? `Error (${oRow.oResTM.oErrorDetailed.status} - ${oRow.oResTM.oErrorDetailed.message})` : this.formatter.getStatusMessage(oRow.oResTM.oResponse)
                     });
                 });
                 console.log("aFinalResult", aFinalResult);
