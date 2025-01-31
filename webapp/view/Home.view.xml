@@ -103,8 +103,6 @@
                                             <f:fields>
                                                 <unified:FileUploader
                                                     id="fileUploader"
-                                                    uploadComplete="handleUploadComplete"
-                                                    change="handleFileChange"
                                                     tooltip="Seleccionar archivo Excel"
                                                     placeholder="Seleccionar archivo Excel"
                                                     fileType="xls,xlsx"
@@ -169,7 +167,7 @@
                             <items>
                                 <ColumnListItem highlight="{
                                     parts: [
-                                        'oProcessResult>statusTitle',
+                                        'oProcessResult>statusTile',
                                         'oProcessResult>statusTM'
                                     ],
                                     formatter: '.formatter.formatHighlight'
@@ -177,7 +175,7 @@
                                     <cells>
                                         <Text text="{oProcessResult>id}" />
                                         <Text text="{oProcessResult>name}" />
-                                        <Text text="{oProcessResult>statusTitle}" />
+                                        <Text text="{oProcessResult>statusTile}" />
                                         <Text text="{oProcessResult>statusTM}" />
                                     </cells>
                                 </ColumnListItem>

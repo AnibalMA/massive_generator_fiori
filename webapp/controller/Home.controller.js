@@ -21,6 +21,9 @@ sap.ui.define([
         onInit() {
             this.fnListOTs();
             this.fnGetDefaultPackage();
+            this.getView().setModel(new sap.ui.model.json.JSONModel([]), "oProcessResult");
+            this.getView().setModel(new sap.ui.model.json.JSONModel([]), "OTWorkbenchs");
+            this.getView().setModel(new sap.ui.model.json.JSONModel({}), "Package");
         },
         onLeerExcel: function () {
             let oFileUploader = this.byId("fileUploader");
@@ -143,13 +146,14 @@ sap.ui.define([
                     aFinalResult.push({
                         id: iRowIndex + 1,
                         name: JSON.parse(JSON.parse(oData[iRowIndex].oBodyTile.configuration).tileConfiguration).display_title_text + " / " + JSON.parse(JSON.parse(oData[iRowIndex].oBodyTM.configuration).tileConfiguration).transaction?.code,
-                        statusTitle: parseInt(oRow.oResTitle.oResponse.statusCode) === oHTTPCodes.CREATED ? `OK (${oRow.oResTitle.oResponse.statusCode} - ${oRow.oResTitle.oResponse.statusText})` : `Error (${oRow.oResTitle.oResponse.statusCode} - ${oRow.oResTitle.oResponse.statusText})`,
-                        statusTM: parseInt(oRow.oResTM.oResponse.statusCode) === oHTTPCodes.CREATED ? `OK (${oRow.oResTM.oResponse.statusCode} - ${oRow.oResTM.oResponse.statusText})` : `Error (${oRow.oResTM.oResponse.statusCode} - ${oRow.oResTM.oResponse.statusText})`
+                        statusTile: oRow.oResTile.oErrorDetailed ? `Error (${oRow.oResTile.oErrorDetailed.status} - ${oRow.oResTile.oErrorDetailed.message})` : `OK (${oRow.oResTile.oResponse.statusCode} - ${oRow.oResTile.oResponse.statusText})`,
+                        statusTM: oRow.oResTM.oErrorDetailed ? `Error (${oRow.oResTM.oErrorDetailed.status} - ${oRow.oResTM.oErrorDetailed.message})` : `OK (${oRow.oResTM.oResponse.statusCode} - ${oRow.oResTM.oResponse.statusText})` 
                     });
                 });
-
-                this.getView().setModel(new sap.ui.model.json.JSONModel(aFinalResult), "oProcessResult");
+                console.log("aFinalResult", aFinalResult);
+                this.getView().getModel("oProcessResult").setData(aFinalResult);
                 sap.m.MessageToast.show("Proceso terminado");
+                this.getView().byId("fileUploader").clear();
                 this.getView().byId("_IDGenButton").setBusy(false);
             }, this);
         },
@@ -159,11 +163,11 @@ sap.ui.define([
                 selectedOT: aData.filter((item) => item.isDefaultRequest === true)?.[0]?.id,
                 items: aData
             };
-            this.getView().setModel(new sap.ui.model.json.JSONModel(oDataSet), "OTWorkbenchs");
+            this.getView().getModel("OTWorkbenchs").setData(oDataSet);
         },
         fnGetDefaultPackage: async function () {
             let oData = await S4HService.fnGetPackage(true);
-            this.getView().setModel(new sap.ui.model.json.JSONModel(oData?.[0] || {}), "Package");
+            this.getView().getModel("Package").setData(oData?.[0] || {});
         }
     });
 });

@@ -96,22 +96,22 @@ sap.ui.define([
          */
         fnPostTileTM: function (oBodyTile, oBodyTM) {
             return new Promise((resolve, reject) => {
-                let oResTitle;
+                let oResTile;
 
                 oDataService.create("PageChipInstances", oBodyTile).then((oData) => {
-                    oResTitle = oData
+                    oResTile = oData
                 }).catch((oErr) => {
-                    oResTitle = oErr;
+                    oResTile = oErr;
                 });
                 
                 oDataService.create("PageChipInstances", oBodyTM).then( (oData) => {
                     resolve({
-                        oResTitle,
+                        oResTile,
                         oResTM: oData
                     });
                 }).catch((oErr) => {
                     resolve({
-                        oResTitle,
+                        oResTile,
                         oResTM: oErr
                     });
                 });
